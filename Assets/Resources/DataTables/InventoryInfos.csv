@@ -1,0 +1,7 @@
+Id,Category,Name,Amount,Cost,Desc,Image
+1001,Book,Book,1,10,책,Icon_Book
+1002,Boot,Boots01_Purple,2,20,보라색 부츠,Icon_Boots01_Purple
+1003,Boot,Boots01_White,2,30,흰색 부츠,Icon_Boots01_White
+1004,Boot,Boots02,2,40,일반 부츠,Icon_Boots02
+1005,Bow,Bow01,3,30,활 1,Icon_Bow01
+1006,Bow,Bow02,3,30,특별한 활 2,Icon_Bow02
