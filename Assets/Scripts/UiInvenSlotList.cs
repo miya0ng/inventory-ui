@@ -53,7 +53,7 @@ public class UiInvenSlotList : MonoBehaviour
 
     public int maxCount = 30;
 
-    private List<SaveItemData> testItemList = new List<SaveItemData>();
+    private List<SaveItemData> testItemList;
 
     private SortingOptions sorting = SortingOptions.NameAccending;
     private FilteringOptions filtering = FilteringOptions.None;
@@ -82,37 +82,41 @@ public class UiInvenSlotList : MonoBehaviour
     public UnityEvent onUpdateSlots;
     public UnityEvent<SaveItemData> onSelectSlot;
 
-    public void Save()
+    public void LoadData()
     {
-        var jsonText = JsonConvert.SerializeObject(testItemList);
-        var filePath = Path.Combine(Application.persistentDataPath, "test.json");
-        File.WriteAllText(filePath, jsonText);
-    }
-
-    public void Load()
-    {
-        var filePath = Path.Combine(Application.persistentDataPath, "test.json");
-        if (!File.Exists(filePath))
+        SaveLoadManager.Data = new SaveDataV3();
+        if (SaveLoadManager.Load(SaveLoadManager.SaveDataVersion - 1))
         {
-            return;
+            Debug.Log("Game Loaded");
+            testItemList = SaveLoadManager.Data.saveItemDatas ?? new List<SaveItemData>();
         }
-        var jsonText = File.ReadAllText(filePath);
-        testItemList = JsonConvert.DeserializeObject<List<SaveItemData>>(jsonText);
+        else
+        {
+            Debug.Log("No Save Data");
+        }
         UpdateSlots(testItemList);
     }
-
-    private void Awake()
+    public void SaveData()
     {
+        SaveLoadManager.Data = new SaveDataV3();
+        SaveLoadManager.Data.saveItemDatas = testItemList;
+        SaveLoadManager.Save(SaveLoadManager.SaveDataVersion - 1);
     }
-
     private void OnEnable()
     {
-        Load();
+        //Load();
+        LoadData();
     }
 
     private void OnDisable()
     {
-        Save();
+        //Save();
+        SaveData();
+    }
+
+    private void Awake()
+    {
+       
     }
 
     private void UpdateSlots(List<SaveItemData> itemList)
