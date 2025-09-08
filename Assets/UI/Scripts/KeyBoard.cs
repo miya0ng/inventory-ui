@@ -1,15 +1,20 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class KeyBoard : GenericWindow
 {
     //public List<Button> inputKeys = new List<Button>();
-    public GameObject KEYS;
+    public GameObject keyGroup;
+    public Button[] Keys;
     public TextMeshProUGUI inputField;
+    public string underBar = "_";
     public Button Cancel;
     public Button Accect;
     public Button Delete;
@@ -18,81 +23,68 @@ public class KeyBoard : GenericWindow
     private static readonly int maxInputLength = 7;
 
 
-    private void UpdateUnderbar()
+    void Start()
     {
-        if (barCoroutine != null)
+        Cancel.onClick.AddListener(() => OnCancle());
+        Accect.onClick.AddListener(() => OnAccect());
+        Delete.onClick.AddListener(() => OnDelete());
+        barCoroutine = StartCoroutine(UnderBarBlink());
+        Keys = keyGroup.GetComponentsInChildren<Button>();
+
+        for (int i = 0; i < Keys.Length; i++)
         {
-            StopCoroutine(barCoroutine);
+            int index = i;
+            Keys[i].onClick.AddListener(() => OnClickKey(index)
+           );
         }
-        barCoroutine = StartCoroutine(updateBar());
-    }
-    public override void Open()
-    {
-        base.Open();
-        inputField.text = string.Empty;
-        isUnderBar = true;
-        UpdateUnderbar();
     }
 
-    private void Awake()
+    private void Update()
     {
-        var ikeys = KEYS.GetComponentsInChildren<Button>();
-        foreach (var key in ikeys)
+
+    }
+
+    private IEnumerator UnderBarBlink()
+    {
+        while(true)
         {
-            key.onClick.AddListener(() => OnKeyPress(key));
-        }
-        //foreach (var key in inputKeys)
-        //{
-        //    key.onClick.AddListener(() => OnKeyPress(key));
-        //}
-        Cancel.onClick.AddListener(OnCancel);
-        Accect.onClick.AddListener(OnAccect);
-        Delete.onClick.AddListener(OnDelete);
+            inputField.text += "_";
 
-    }
-
-    public IEnumerator updateBar()
-    {
-        while (isUnderBar)
-        {
-            inputField.text = "_";
             yield return new WaitForSeconds(0.5f);
-            inputField.text = string.Empty;
+
+            inputField.text = inputField.text.Replace("_", string.Empty);
+
+
             yield return new WaitForSeconds(0.5f);
         }
     }
 
-    public void OnKeyPress(Button key)
+    private void OnClickKey(int index)
     {
-        if (inputField.text.Length >= maxInputLength)
+        if (inputField.text.Length <= maxInputLength)
         {
-            return;
+            string key = Keys[index].GetComponentInChildren<TextMeshProUGUI>().text.Replace("\n", "");
+            inputField.text += key;
+
+
+            //inputField.text = sb.ToString();
+            Debug.Log("keyclick");
         }
-        isUnderBar = false;
-        inputField.text = string.Concat(inputField.text, key.GetComponentInChildren<TextMeshProUGUI>().text);
+    }
+    public void OnCancle()
+    {
+        var text = inputField.text.Remove(inputField.text.Length - 1);
+        inputField.text = text;
     }
 
-    public void OnDelete()
-    {
-        if (inputField.text.Length > 0)
-        {
-            inputField.text = inputField.text.Remove(inputField.text.Length - 1);
-        }
-        if (inputField.text.Length <= 0)
-        {
-            inputField.text = string.Empty;
-            isUnderBar = true;
-            UpdateUnderbar();
-        }
-    }
-    public void OnCancel()
-    {
-        inputField.text = string.Empty;
-        isUnderBar = true;
-        UpdateUnderbar();
-    }
     public void OnAccect()
     {
-        gameObject.SetActive(false);
+        base.Close();
+        Close();
+    }
+    public void OnDelete()
+    {
+        Debug.Log("Delete button clicked!");
+        inputField.text = string.Empty;
     }
 }

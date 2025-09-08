@@ -6,16 +6,16 @@ using static UnityEngine.Rendering.DebugUI;
 public class DifficultyWindow : GenericWindow
 {
 
-    public int index = 0;
+    public int index;
     public ToggleGroup toggleGroup;
     public Toggle[] toggles;
-    public override void Open()
-    {
-        base.Open();
-        toggles[index].isOn = true;
-        index = SaveLoadManager.Data.difficulty;
-        SaveLoadManager.Load();
-    }
+    //public override void Open()
+    //{
+    //    base.Open();
+    //    SaveLoadManager.Load();
+    //    index = SaveLoadManager.Data.difficulty;
+    //    toggles[index].isOn = true;
+    //}
 
     public void OnToggle()
     {
@@ -23,7 +23,7 @@ public class DifficultyWindow : GenericWindow
         {
            if(toggles[i].isOn)
             {
-                index = i;
+
                 Debug.Log(i);
                 break;
             }
@@ -39,6 +39,7 @@ public class DifficultyWindow : GenericWindow
     {
         if (value)
         {
+            index = 0;
             Debug.Log("OnClickEasy");
         }
     }
@@ -46,6 +47,7 @@ public class DifficultyWindow : GenericWindow
     {
         if (value)
         {
+            index = 1;
             Debug.Log("OnClickNormal");
 
         }
@@ -54,6 +56,7 @@ public class DifficultyWindow : GenericWindow
     {
         if (value)
         {
+            index = 2;
             Debug.Log("OnClickHard");
         }
     }
@@ -63,10 +66,20 @@ public class DifficultyWindow : GenericWindow
     {
 
     }
-
-    private void OnDisable()
+    public override void Open()
     {
+        base.Open();
+        SaveLoadManager.Load();
+        index = SaveLoadManager.Data.difficulty;
+        toggles[index].isOn = true;
+        toggles[index].Select();
+    }
+    public override void Close()
+    {
+        base.Close();
         SaveLoadManager.Data.difficulty = index;
+        toggles[index].isOn = true;
+        toggles[index].Select();
         SaveLoadManager.Save();
     }
 
