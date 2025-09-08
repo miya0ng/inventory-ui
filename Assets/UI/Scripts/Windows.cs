@@ -3,7 +3,8 @@ using UnityEngine;
 public enum Windows
 {
     None,
-    defaultWindow,
+    GameOver,
+    Difficulty,
     MainMenu,
     Settings,
     PauseMenu,
@@ -15,6 +16,5 @@ public enum Windows
     Dialogue,
     Shop,
     LoadingScreen,
-    GameOver,
     Credits
 }

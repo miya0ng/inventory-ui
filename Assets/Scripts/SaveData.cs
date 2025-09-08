@@ -61,6 +61,20 @@ public class SaveDataV3 : SaveData
     }
     public override SaveData VersionUp()
     {
+        var saveDataV4 = new SaveDataV4();
+        return saveDataV4;
+    }
+}
+[Serializable]
+public class SaveDataV4 : SaveData
+{
+    public int difficulty;
+    public SaveDataV4()
+    {
+        Version = 4;
+    }
+    public override SaveData VersionUp()
+    {
         throw new NotImplementedException();
     }
 }

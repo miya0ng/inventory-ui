@@ -40,5 +40,7 @@ public class StarterWindow : GenericWindow
     public void OnClickOption()
     {
         Debug.Log("OnClickOption");
+        DifficultyWindow difficultyWindow = new DifficultyWindow();
+        difficultyWindow.Open();
     }
 }

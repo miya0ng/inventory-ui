@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
-using SaveDataVC = SaveDataV3;  // @
+using SaveDataVC = SaveDataV4;  // @
 public class SaveLoadManager
 {
-    public UiInvenSlotList UiInvenSlotList { get; set; }
-    public static int SaveDataVersion => 3;
+    //public UiInvenSlotList UiInvenSlotList { get; set; }
+    public static int SaveDataVersion => 4;
 
     public static SaveDataVC Data { get; set; } = new SaveDataVC();
 
